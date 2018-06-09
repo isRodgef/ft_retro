@@ -100,7 +100,7 @@ Bullet :: Bullet(char dir)
     this->player = false;
     this->alive = true;
     this->signature = 2;
-    this->direction = dir;
+    this->direction = dir; 
 }
 
 char Bullet :: getDirection()
