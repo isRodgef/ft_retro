@@ -30,7 +30,6 @@ Arena :: Arena()
                 this->area[0][i] = e;
 }
 
-
 //0 empty
 //1 player
 //-1 enemy 
@@ -98,16 +97,16 @@ void Arena :: eval(){
                 case 2:
                     if (this->area[j][k].getDirection() == 'u')
                     {
-                        if (this->area[j][k - 1].isAlive())
+                        if (k > 0 and this->area[j][k - 1].isAlive() and this->area[j][k - 1].getSig() != 1 )
                         {
                             this->area[j][k - 1] = placeholder;                            
                         }
                         this->area[j][k] = placeholder;
 
                     }
-                    if (this->area[j][k].getDirection() == 'd')
+                    if (this->area[j][k].getDirection() == 'd' )
                     {
-                         if (this->area[j][k + 1].isAlive())
+                         if (k < this->y and  this->area[j][k + 1].isAlive() and this->area[j][k - 1].getSig() != -1)
                         {
                             this->area[j][k+1] = placeholder;                            
                         }
@@ -129,13 +128,15 @@ GameEntity** Arena :: get_area()
 
 void Arena :: moveLeft()
 {
+    Empty e;
     for (int i = 0; i < this->x ; i++)
     {
         for (int j = 0; j < this->y ; j++)
         {
             if (this->area[i][j].getSig() == 1)
             {
-                this->area[(i + 1) % this->x][j] = this->area[i][j]; 
+                this->area[i][(j - 1) % this->y] = this->area[i][j]; 
+                this->area[i][j] = e;
                 return;
             }
         }   
@@ -144,6 +145,7 @@ void Arena :: moveLeft()
 
 void Arena :: moveRight()
 {
+    Empty e;
     for (int i = 0; i < this->x ; i++)
     {
         for (int j = 0; j < this->y ; j++)
@@ -151,8 +153,38 @@ void Arena :: moveRight()
             if (this->area[i][j].getSig() == 1)
             {
                 this->area[i][(j + 1) %  this->y] = this->area[i][j];
+                this->area[i][j] = e;                       
                 return;
             }
         }  
     }
+}
+
+void Arena :: spawn_bullet(bool key)
+{
+        int check = 0;
+        for (int i = 0; i < this->x ; i++)
+        {
+            for (int j = 0; j < this->y ; j++)
+            {
+                if (key && this->area[i][j].getSig() == 1)
+                {
+                    Bullet b('u');          
+                    this->area[i - 1][j] = b;                       
+                    return;
+                }
+                else
+                {
+                    if (not key and this->area[i][j].getSig() == -1)
+                    {
+                        check = rand() % 2; 
+                        if (check == 1)
+                        {
+                            Bullet e('d');          
+                            this->area[i + 1][j] = e;
+                        }
+                    }
+                }
+            }  
+        }
 }
