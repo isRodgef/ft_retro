@@ -20,6 +20,7 @@ class Arena
         GameEntity **get_area();
         void moveLeft();
         void moveRight();
+        void spawn_bullet(bool key);
         ~Arena();
 };
 
