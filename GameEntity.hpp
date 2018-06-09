@@ -6,60 +6,58 @@
 
 class GameEntity
 {
-    short weapon;
-    bool alive;
-    bool player;
+
+    protected:
+        bool alive;
+        bool player;
+        short signature;
 
     public: 
         GameEntity();
-        GameEntity(bool player);
-        virtual bool isAlive() = 0;
-        virtual short getWeapon() =0;
-        virtual bool isplayable() = 0;
+        void die();
+        bool isAlive() const;
+        bool isplayable() const;
+        short getSig() const;
+        void operator=(const GameEntity &other);
         ~GameEntity();
+        char getDirection();
 };
 
 class Player : public GameEntity
 {
-    short weapon;
-    bool alive;
-    bool player;
     short score;
 
     public: 
         Player();
-        bool isAlive();
-        short getWeapon();
-        bool isplayable();
+        char getDirection();
         ~Player();
 };
 
 class Enemy : public GameEntity
 {
-    short weapon;
-    bool alive;
-    std:: string name;
-    bool player;
 
     public: 
         Enemy();
-        bool isAlive() = 0;
-        short getWeapon() =0;
-        bool isplayable();
+        char getDirection();
         ~Enemy();
 };
 
 class Bullet : public GameEntity
-    short weapon;
-    bool alive;
-    std:: string name;
-    bool player;
-
+{
+    char direction; 
     public: 
         Bullet();
-        bool isAlive() = 0;
-        short getWeapon() =0;
-        bool isplayable();
+        Bullet(char dir);
+        char getDirection();
         ~Bullet();
 };
+
+class Empty : public GameEntity
+{
+    public: 
+        Empty();
+        char getDirection();
+        ~Empty();
+};
+
 #endif
