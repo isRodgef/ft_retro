@@ -8,14 +8,15 @@ class Arena
 {
     int x;
     int y;
-    short **area; 
+    GameEntity **area; 
+    
     public:
         Arena();
         Arena(int x, int y);
         short getX();
         short getY();
+        void eval();
         ~Arena();
-        void Render();
 };
 
 #endif
