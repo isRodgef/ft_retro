@@ -3,11 +3,12 @@
 
 Arena :: Arena()
 {
+    this->even = true;
     this->x = 10;
     this->y = 50;
     this->area = new GameEntity*[x];
     Player p;
-
+    Enemy e;
     Empty placeholder;
     
     for (int i = 0; i < this->y; ++i)
@@ -18,7 +19,15 @@ Arena :: Arena()
             this->area[j][k] = placeholder;   
         }
     }
-    //this->area[(this->x - 1) ][(this->y -1) /2] = p;
+    this->area[(this->x - 1) ][(this->y -1) /2] = p;
+    for (int i = 0; i < this->x; i++)
+        if  (this->even){
+            if (i % 2 == 0)
+                this->area[0][i] = e;
+        }
+        else 
+            if (i % 2 == 1)
+                this->area[0][i] = e;
 }
 
 
@@ -28,6 +37,7 @@ Arena :: Arena()
 //2 bullet
 Arena :: Arena (int x, int y)
 {
+    this->even = true;
     this->x = x;
     this->y = y;
     this->area = new GameEntity*[x];
@@ -45,7 +55,14 @@ Arena :: Arena (int x, int y)
     }
    this->area[(this->x - 1) ][(this->y -1) /2] = p;
     for (int i = 0; i < this->x; i++)
-        this->area[0][i] = e;
+        if  (this->even){
+            if (i % 2 == 0)
+                this->area[0][i] = e;
+        }
+        else 
+            if (i % 2 == 1)
+                this->area[0][i] = e;
+
 }
 
 Arena :: ~Arena ()
@@ -102,5 +119,40 @@ void Arena :: eval(){
 
             }
         }
+    }
+}
+
+GameEntity** Arena :: get_area()
+{
+    return this->area;
+}
+
+void Arena :: moveLeft()
+{
+    for (int i = 0; i < this->x ; i++)
+    {
+        for (int j = 0; j < this->y ; j++)
+        {
+            if (this->area[i][j].getSig() == 1)
+            {
+                this->area[(i + 1) % this->x][j] = this->area[i][j]; 
+                return;
+            }
+        }   
+    }
+}
+
+void Arena :: moveRight()
+{
+    for (int i = 0; i < this->x ; i++)
+    {
+        for (int j = 0; j < this->y ; j++)
+        {
+            if (this->area[i][j].getSig() == 1)
+            {
+                this->area[i][(j + 1) %  this->y] = this->area[i][j];
+                return;
+            }
+        }  
     }
 }
