@@ -118,3 +118,9 @@ void GameEntity :: setMoved()
 {
     this->moved = not this->moved;
 }
+
+void Player :: increase()
+{
+    this->score++;
+    this->total = score;
+}
