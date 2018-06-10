@@ -1,5 +1,6 @@
 #include "Arena.hpp"
 #include <iostream>
+#include <string>
 
 Arena :: Arena()
 {
@@ -13,7 +14,6 @@ Arena :: Arena()
     Player p;
     Enemy e;
     Empty placeholder;
-    //WINDOW *win = newwin(0,0,0,0);
     
     for (int i = 0; i < this->y; ++i)
         this->area[i] =new GameEntity[y];
@@ -72,12 +72,6 @@ Arena::Arena (int x, int y) {
                 this->area[0][i] = e;        
         }
 }
-/*
-  if (this->area[i][j].getSig() == -1) {
-                if (i +1 < this->x) {
-                    this->area[(i + 1 )% this->x] [j] = this->area[i][j]; 
-                    this->area[i][j] = e;
-*/
 
 Arena::~Arena () {
     for(int i = 0; i < this->y; ++i)
@@ -99,55 +93,10 @@ short Arena::getY() {
 void Arena::eval() {
     Empty placeholder;
 
-    for(int j = 0; j < this->x; ++j) {
-        for(int k = 0; k < this->y; ++k) {            
-            //std::cout << this->area[j][k].getSig() << ' ';
-            refresh();
-           // wrefresh(stdscr);
-           this->placeEnemy();
-           switch (this->area[j][k].getSig()) {
-                case 0:
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    if (this->area[j][k].getDirection() == 'u')// and not  this->area[j][k].getMoved())
-                    {
-                       /* if (k > 0 and this->area[j][k - 1].isAlive() and this->area[j][k - 1].getSig() != 1 )
-                        {
-                            this->area[j][k - 1] = placeholder;                            
-                        }
-                        else if ( not this->area[j][k-1].isAlive())
-                        {
-                            this->area[j][k-1] = this->area[j][k];
-                        }*/
-                        //this->area[j][k-1] = this->area[j][k];
-                        this->area[j][k] = placeholder;
-                        //this->area[j][k-1].setMoved();
-                        //return;
-                                        
-                    }
-                    /*if (this->area[j][k].getDirection() == 'd' )
-                    {
-                         if (k < this->y and  this->area[j][k + 1].isAlive() and this->area[j][k - 1].getSig() != -1)
-                        {
-                            this->area[j][k+1] = placeholder;                            
-                        }
-                        else if ( not this->area[j][k+1].isAlive())
-                        {
-                           this->area[j][k+1] = this->area[j][k]; 
-                        }
-                    
-                        this->area[j][k] = placeholder;
-                    }*/
-                   // this->area[j][k] = placeholder;
-                    break;
-                default:
-                    break;
-
-            }
-        }
-    }
+     this->placeEnemy();
+     this->moveBullet();
+    this->spawn_bullet(false);
+     refresh();
 }
 
 GameEntity** Arena :: get_area() {
@@ -193,11 +142,12 @@ void Arena :: spawn_bullet(bool key) {
                 else {
                     if (not key and this->area[i][j].getSig() == -1)
                     {
-                        check = rand() % 2; 
+                        check = rand() % 8; 
                         if (check == 1)
                         {
                             e = Bullet('d');          
-                            this->area[i + 1][j] = e;
+                            if (this->area[i + 1][j].getSig() == 0)
+                                this->area[i + 1][j] = e;
                         }
                     }
                 }
@@ -212,17 +162,13 @@ void Arena :: display()
     clear();
     while (true){
     this->eval();
-   // this->spawn_bullet(false);
     for (int i = 0; i < this->x; i++)
     {
         for (int j = 0; j  < this->y; j++)
         {
           //  box(stdscr,0,0);
-               // std::cout << "before switch" << std::endl;  
             switch(this->area[i][j].getSig())
             {
-                addstr("ss");
-                    //std::cout << "before case" << std::endl;
                 case 0:
                     addstr("   ");
                     break;
@@ -235,8 +181,7 @@ void Arena :: display()
                 case 2:
                     addstr("±±±");
                     break;
-            }
-               // mvprintw(i * 5, i * 5, "Hello, world!");
+            } 
             nodelay(stdscr,TRUE);
             switch(getch())
             {
@@ -253,7 +198,7 @@ void Arena :: display()
         }
             addstr("\n");
     }
-        napms(600);
+        napms(800);
         clear();
     }    
 }
@@ -279,9 +224,49 @@ void Arena :: placeEnemy()
                     this->area[i][j+1]  = this->area[i][j];
                     place = true;
                 }
+                if (this->area[i][j+1].getSig() == 2)
+                {
+                    this->area[i][j]  = e;
+               }
                 if (place )
                     return ;
             }
         }
     }
+}
+
+void Arena :: moveBullet()
+{
+    bool place = false;
+      for (int i = 0; i < this->x; i++)
+    {
+        for (int j = 0; j  < this->y; j++)
+        {
+            if (this->area[i][j].getSig() == 2)
+            {
+                if (not place and j + 1 < this->y and this->area[j + 1][j].getSig() == 0)
+                {
+                    this->area[i][j + 1]  = this->area[i][j];
+                    place = true;
+                }
+                if (place )
+                    return ;
+            }
+        }
+    }
+}
+
+void Arena ::gameover( int value ) {
+   endwin();
+   (void) value;
+    initscr();
+    noecho();
+    curs_set(FALSE);;
+
+    addstr("you lose");
+    std::cout << "game over " << std::endl;
+    napms(600);
+    endwin();
+    
+  
 }
