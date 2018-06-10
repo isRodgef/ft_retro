@@ -26,8 +26,8 @@ int main()
     }*/
 
   
-    Arena a(10,10);
-    std::signal(SIGSEGV, a.gameover);
+    Arena a;//(30,30);
+   // std::signal(SIGSEGV, a.gameover);
     /*a.spawn_bullet(true);
     a.spawn_bullet(false);
     a.spawn_bullet(false);
