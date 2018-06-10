@@ -101,9 +101,20 @@ Bullet :: Bullet(char dir)
     this->alive = true;
     this->signature = 2;
     this->direction = dir; 
+    this->moved = false;
 }
 
 char Bullet :: getDirection()
 {
     return this->direction;
+}
+
+bool GameEntity :: getMoved()
+{
+    return this->moved;
+}
+
+void GameEntity :: setMoved()
+{
+    this->moved = not this->moved;
 }
