@@ -25,6 +25,8 @@ class Arena
         void display();
         ~Arena();
         void placeEnemy();
+        void moveBullet();
+        void static gameover(int values);
 };
 
 #endif
