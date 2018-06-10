@@ -6,26 +6,28 @@
 #include "Arena.hpp"
 
 
+
+
+
 int main()
 {
     srand(0);
-    /*
-    initscr();
+   /* initscr();
     noecho();
     curs_set(FALSE);
 
-    mvprintw(0, 0, "Hello, world!");
-    while (true)
+    mvprintw(0, 0, "Hello, world!");*/
+  /*  while (true)
     {
         getch();
+        mvprintw(1, 322, "Hello, world!");
         refresh();
-    }
+    }*/
 
   
-    endwin();*/
     Arena a(10,10);
 
-    a.spawn_bullet(true);
+    /*a.spawn_bullet(true);
     a.spawn_bullet(false);
     a.spawn_bullet(false);
     a.eval();
@@ -39,5 +41,8 @@ int main()
     std :: cout <<  std :: endl << std ::endl <<  std ::endl;
     a.eval();
     std :: cout <<  std :: endl << std ::endl <<  std ::endl;
+    endwin();*/
+
+    a.display();
     return 0;
 }
