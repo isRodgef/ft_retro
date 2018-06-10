@@ -4,8 +4,7 @@
 
 #include <string> 
 
-class GameEntity
-{
+class GameEntity {
 
     protected:
         bool alive;
@@ -13,6 +12,7 @@ class GameEntity
         short signature;
         bool moved;
         short total;
+        short score;
 
     public: 
         GameEntity();
@@ -25,27 +25,26 @@ class GameEntity
         ~GameEntity();
         char getDirection();
         void setMoved();
-};
-
-class Player : public GameEntity
-{
-    short score;
-
-    public: 
-        Player();
-        char getDirection();
         void increase();
-        ~Player();
 };
 
-class Enemy : public GameEntity
-{
+// class Player : public GameEntity
+// {
 
-    public: 
-        Enemy();
-        char getDirection();
-        ~Enemy();
-};
+//     public: 
+//         Player();
+//         char getDirection();
+//         ~Player();
+// };
+
+// class Enemy : public GameEntity
+// {
+
+//     public: 
+//         Enemy();
+//         char getDirection();
+//         ~Enemy();
+// };
 
 class Bullet : public GameEntity
 {
@@ -58,12 +57,12 @@ class Bullet : public GameEntity
         ~Bullet();
 };
 
-class Empty : public GameEntity
-{
-    public: 
-        Empty();
-        char getDirection();
-        ~Empty();
-};
+// class Empty : public GameEntity
+// {
+//     public: 
+//         Empty();
+//         char getDirection();
+//         ~Empty();
+// };
 
 #endif
