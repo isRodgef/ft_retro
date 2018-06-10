@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <cstdlib>
 #include <ctime>
+#include <csignal>
 
 #include "Arena.hpp"
 
@@ -26,7 +27,7 @@ int main()
 
   
     Arena a(10,10);
-
+    std::signal(SIGSEGV, a.gameover);
     /*a.spawn_bullet(true);
     a.spawn_bullet(false);
     a.spawn_bullet(false);
