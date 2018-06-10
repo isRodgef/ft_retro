@@ -1,6 +1,7 @@
 #ifndef ARENA_HPP
 #define ARENA_HPP 
 
+#include <ncurses.h>
 #include "GameEntity.hpp"
 
 
@@ -21,7 +22,9 @@ class Arena
         void moveLeft();
         void moveRight();
         void spawn_bullet(bool key);
+        void display();
         ~Arena();
+        void placeEnemy();
 };
 
 #endif
