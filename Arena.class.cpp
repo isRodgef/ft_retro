@@ -1,16 +1,23 @@
 #include "Arena.hpp"
+#include "Empty.hpp"
+#include "Player.hpp"
+#include "Enemy.hpp"
+// #include "Bullet.hpp"
 #include <iostream>
 #include <string>
+#include <cmath>
 
-Arena :: Arena()
-{
+Arena::Arena() {
     initscr();
     noecho();
     curs_set(FALSE);
+    cbreak();
+
     this->even = true;
-    this->x = 10;
+    this->x = 50;
     this->y = 50;
     this->area = new GameEntity*[x];
+
     Player p;
     Enemy e;
     Empty placeholder;
@@ -18,8 +25,8 @@ Arena :: Arena()
     for (int i = 0; i < this->y; ++i)
         this->area[i] =new GameEntity[y];
    
-    for(int j = 0; j < this->x; ++j){
-        for(int k = 0; k < this->y; ++k){            
+    for(int j = 0; j < this->x; ++j) {
+        for(int k = 0; k < this->y; ++k) {            
             this->area[j][k] = placeholder;   
         }
     }
@@ -34,14 +41,12 @@ Arena :: Arena()
                 this->area[0][i] = e;
 }
 
-//0 empty
-//1 player
-//-1 enemy 
-//2 bullet
 Arena::Arena (int x, int y) {
     initscr();
     noecho();
     curs_set(FALSE);
+    cbreak();
+
     this->even = true;
     this->x = x;
     this->y = y;
@@ -92,11 +97,14 @@ short Arena::getY() {
 
 void Arena::eval() {
     Empty placeholder;
+    if(this->area[this->x -1][0].getSig() == -1) {
+            this->gameover(0);
+    }
 
      this->placeEnemy();
      this->moveBullet();
-    this->spawn_bullet(false);
      refresh();
+     wrefresh(stdscr);
 }
 
 GameEntity** Arena :: get_area() {
@@ -108,7 +116,7 @@ void Arena::moveLeft() {
     for (int i = 0; i < this->x ; i++) {
         for (int j = 0; j < this->y ; j++) {
             if (this->area[i][j].getSig() == 1) {
-                this->area[i][(j - 1) % this->y] = this->area[i][j]; 
+                this->area[i][abs(j - 1) % this->y] = this->area[i][j]; 
                 this->area[i][j] = e;
                 return;
             } 
@@ -142,7 +150,7 @@ void Arena :: spawn_bullet(bool key) {
                 else {
                     if (not key and this->area[i][j].getSig() == -1)
                     {
-                        check = rand() % 8; 
+                        check = rand() % 15; 
                         if (check == 1)
                         {
                             e = Bullet('d');          
@@ -157,20 +165,33 @@ void Arena :: spawn_bullet(bool key) {
 
 void Arena :: display()
 {
- 
-    addstr("ss1");
-    clear();
+    int xx =0,yy =0;
+    getmaxyx(stdscr,yy,xx);
+   // clear();
+   
+        
     while (true){
+    box(stdscr,0,0);
+    getmaxyx(stdscr,yy,xx); 
     this->eval();
+    
+
     for (int i = 0; i < this->x; i++)
     {
+       
+        box(stdscr,0,0);
         for (int j = 0; j  < this->y; j++)
         {
-          //  box(stdscr,0,0);
             switch(this->area[i][j].getSig())
             {
+                move(yy/2   + j + 100 ,xx / 2 + i + 100);
                 case 0:
-                    addstr("   ");
+                    
+                    if (j % 5 ==0)
+                        addstr("_-_");
+                    else
+                        addstr("   ");
+                     
                     break;
                 case 1:
                     addstr("<|>");
@@ -198,8 +219,8 @@ void Arena :: display()
         }
             addstr("\n");
     }
-        napms(800);
         clear();
+        napms(400);
     }    
 }
 
@@ -210,26 +231,27 @@ void Arena :: placeEnemy()
     bool place = false;  
      for (int i = 0; i < this->x; i++)
     {
-        for (int j = 0; j  < this->y; j++)
+        for (int j = 0; j < this->y; j++)
         {
             if (this->area[i][j].getSig() == -1)
             {
-                if (not place and i + 1 < this->x and this->area[i + 1][j].getSig() == 0)
+                if (not place and i + 1 < this->y and this->area[i + 1][j].getSig() == 0 and j % 5 > 0)
+                // if (not place and i - 1 < this->y and  this->area[i - 1][j].getSig() != 1)
                 {
                     this->area[i + 1][j]  = this->area[i][j];
                     place = true;
                 }
                 if (not place and j + 1 < this->y and this->area[i][j+1].getSig() == 0)
                 {
-                    this->area[i][j+1]  = this->area[i][j];
+                    this->area[i][j + 1]  = this->area[i][j];
                     place = true;
                 }
-                if (this->area[i][j+1].getSig() == 2)
+               /* if (this->area[i][j+1].getSig() == 2)
                 {
                     this->area[i][j]  = e;
-               }
+                }*/
                 if (place )
-                    return ;
+                    return;
             }
         }
     }
@@ -237,20 +259,28 @@ void Arena :: placeEnemy()
 
 void Arena :: moveBullet()
 {
-    bool place = false;
-      for (int i = 0; i < this->x; i++)
+    Bullet b;
+    Empty e;
+    
+ 
+    for (int i = 0; i < this->x; i++)
     {
         for (int j = 0; j  < this->y; j++)
         {
             if (this->area[i][j].getSig() == 2)
             {
-                if (not place and j + 1 < this->y and this->area[j + 1][j].getSig() == 0)
+                if (i - 1 < this->y and  this->area[i - 1][j].getSig() != 1)
                 {
-                    this->area[i][j + 1]  = this->area[i][j];
-                    place = true;
+                    if ((this->area[i - 1][j].getSig() == 2 or this->area[i - 1][j].getSig() == -1))             
+                    {
+                        this->area[i - 1][j]  = e;
+                        this->area[i][j] = e;
+                    }
+                    this->area[i - 1][j]  = this->area[i][j];
+                    this->area[i][j] = e;
+
+
                 }
-                if (place )
-                    return ;
             }
         }
     }
@@ -259,14 +289,9 @@ void Arena :: moveBullet()
 void Arena ::gameover( int value ) {
    endwin();
    (void) value;
-    initscr();
-    noecho();
-    curs_set(FALSE);;
-
     addstr("you lose");
     std::cout << "game over " << std::endl;
-    napms(600);
-    endwin();
+    exit(0);
     
   
 }
