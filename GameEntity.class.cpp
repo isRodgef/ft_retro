@@ -1,30 +1,21 @@
 #include "GameEntity.hpp"
 
-
-GameEntity :: GameEntity()
-{
-
+GameEntity::GameEntity() {
+    this->score = 0 ;
 }
 
-GameEntity :: ~GameEntity()
-{
+GameEntity::~GameEntity() { }
 
-}
-
-bool GameEntity :: isplayable() const
-{
+bool GameEntity::isplayable() const {
     return this->player;
 }
 
-char GameEntity :: getDirection()
-{
+char GameEntity::getDirection() {
     return 'a';
 }
 
-void GameEntity :: operator =(const GameEntity &g)
-{
-    if (this != &g) 
-    {
+void GameEntity::operator=(const GameEntity &g) {
+    if (this != &g) {
         this->alive = g.isAlive();
         this->player = g.isplayable();
         this->signature = g.getSig();
@@ -46,42 +37,42 @@ bool GameEntity :: isAlive() const
     return this->alive;
 }
 
-Player :: Player()
-{
-    this->player = true;
-    this->score = 0;
-    this->alive = true;
-    this->signature = 1;
-}
+// Player :: Player()
+// {
+//     this->player = true;
+//     this->score = 0;
+//     this->alive = true;
+//     this->signature = 1;
+// }
 
-Player :: ~Player()
-{
+// Player :: ~Player()
+// {
 
-}
+// }
 
-Enemy :: Enemy()
-{
-    this->player = false;
-    this->alive = true;
-    this->signature = -1;
-}
+// Enemy :: Enemy()
+// {
+//     this->player = false;
+//     this->alive = true;
+//     this->signature = -1;
+// }
 
-Enemy :: ~Enemy()
-{
+// Enemy :: ~Enemy()
+// {
 
-}
+// }
 
-Empty :: Empty()
-{
-    this->player = false;
-    this->alive = false;
-    this->signature = 0;
-}
+// Empty :: Empty()
+// {
+//     this->player = false;
+//     this->alive = false;
+//     this->signature = 0;
+// }
 
-Empty :: ~Empty()
-{
+// Empty :: ~Empty()
+// {
   
-}
+// }
 
 Bullet :: Bullet()
 {
@@ -119,8 +110,8 @@ void GameEntity :: setMoved()
     this->moved = not this->moved;
 }
 
-void Player :: increase()
+void GameEntity :: increase()
 {
     this->score++;
-    this->total = score;
+    
 }
