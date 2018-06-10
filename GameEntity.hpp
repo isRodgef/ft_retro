@@ -12,6 +12,7 @@ class GameEntity
         bool player;
         short signature;
         bool moved;
+        short total;
 
     public: 
         GameEntity();
@@ -33,6 +34,7 @@ class Player : public GameEntity
     public: 
         Player();
         char getDirection();
+        void increase();
         ~Player();
 };
 
