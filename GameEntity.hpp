@@ -11,6 +11,7 @@ class GameEntity
         bool alive;
         bool player;
         short signature;
+        bool moved;
 
     public: 
         GameEntity();
@@ -19,8 +20,10 @@ class GameEntity
         bool isplayable() const;
         short getSig() const;
         void operator=(const GameEntity &other);
+        bool getMoved(); 
         ~GameEntity();
         char getDirection();
+        void setMoved();
 };
 
 class Player : public GameEntity
@@ -45,6 +48,7 @@ class Enemy : public GameEntity
 class Bullet : public GameEntity
 {
     char direction; 
+    bool moved;
     public: 
         Bullet();
         Bullet(char dir);
