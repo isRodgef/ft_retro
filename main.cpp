@@ -13,7 +13,9 @@
 int main()
 {
     srand(0);
-   /* initscr();
+   
+    std::signal(SIGSEGV, a.gameover);
+	/* initscr();
     noecho();
     curs_set(FALSE);
 
